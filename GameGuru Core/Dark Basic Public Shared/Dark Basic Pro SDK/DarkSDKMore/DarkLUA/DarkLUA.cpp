@@ -30,6 +30,7 @@
 // Control of NAVMESH
 #include "..\..\..\..\Guru-WickedMAX\GGRecastDetour\GGRecastDetour.h"
 extern GGRecastDetour g_RecastDetour;
+extern void game_createnavmeshfromlevel(bool);
 
 // Control of PARTICLES
 #define NOTFORMAINENGINE
@@ -4328,6 +4329,13 @@ int RDBlockNavMeshWithShape(lua_State* L)
 int RDBlockNavMesh(lua_State *L)
 {
 	return RDBlockNavMeshCore(L,0);
+}
+
+int RDRefreshNavMesh(lua_State* L)
+{
+	lua = L;
+	game_createnavmeshfromlevel(true);
+	return 0;
 }
 
 // TokenDrop functions (include RecastDetour for convenience of navmesh rendering system)
@@ -13492,6 +13500,7 @@ void addFunctions()
 	lua_register(lua, "RDGetPathPointX", RDGetPathPointX);
 	lua_register(lua, "RDGetPathPointY", RDGetPathPointY);
 	lua_register(lua, "RDGetPathPointZ", RDGetPathPointZ);
+	lua_register(lua, "RDRefreshNavMesh", RDRefreshNavMesh);
 	lua_register(lua, "StartMoveAndRotateToXYZ", StartMoveAndRotateToXYZ);
 	lua_register(lua, "MoveAndRotateToXYZ", MoveAndRotateToXYZ);
 	lua_register(lua, "SetEntityPathRotationMode", SetEntityPathRotationMode);	

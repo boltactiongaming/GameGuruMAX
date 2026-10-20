@@ -1039,6 +1039,18 @@ void physics_setupobject ( void )
 					// Cylinder
 					ODECreateDynamicCylinder(t.tphyobj, t.tweight, t.tfriction, 0.01f);
 				}
+				else if (t.tshape == 2)
+				{
+					// Polygon / Mesh
+					if (t.tcollisionscaling != 100)
+					{
+						ODECreateDynamicTriangleMesh(t.tphyobj, t.tweight, t.tfriction, -1, t.tcollisionscaling);
+					}
+					else
+					{
+						ODECreateDynamicTriangleMesh(t.tphyobj, t.tweight, t.tfriction, -1, 0);
+					}
+				}
 				else if (t.tshape == 9)
 				{
 					// Dynamic convex hull

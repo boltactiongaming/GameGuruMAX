@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Wicked-MAX\\x64\\ReleaseForDEV\\M-Physics.obj",
+            "outputs": [
+                "Wicked-MAX\\x64\\ReleaseForDEV\\M-Physics.cpp.obj.dt.module.json",
+                "Wicked-MAX\\x64\\ReleaseForDEV\\M-Physics.cpp.obj.dt.d.json"
+            ],
+            "requires": []
+        }
+    ]
+}
