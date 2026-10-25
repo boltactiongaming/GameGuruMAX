@@ -7519,6 +7519,7 @@ void Wicked_Update_Cloud(void* visual)
 void Wicked_Update_Visuals(void *voidvisual)
 {
 	visualstype* visuals = (visualstype *) voidvisual;
+	if (master_renderer) master_renderer->setVisualStyle(visuals->iVisualStyle);
 	wiScene::WeatherComponent* weather = wiScene::GetScene().weathers.GetComponent(g_weatherEntityID);
 	if (weather)
 	{
@@ -52056,6 +52057,21 @@ bool PostProcess_Settings(float fTabColumnWidth, bool bVisualUpdated)
 	{
 		ImGui::Indent(10);
 		iLastOpenHeader = 8;
+
+		// Visual style: independent of exposure, gamma and other post effects.
+		const char* visual_style_options[] = { "None", "Grimdark / Posterized" };
+		t.visuals.iVisualStyle = t.visuals.iVisualStyle == 1 ? 1 : 0;
+		tab_tab_Column_text("Visual Style", fTabColumnWidth);
+		ImGui::PushItemWidth(-10);
+		if (ImGui::Combo("##DungeoneerVisualStyle", &t.visuals.iVisualStyle,
+			visual_style_options, IM_ARRAYSIZE(visual_style_options)))
+		{
+			t.gamevisuals.iVisualStyle = t.visuals.iVisualStyle;
+			if (master_renderer) master_renderer->setVisualStyle(t.visuals.iVisualStyle);
+			g.projectmodified = 1;
+		}
+		if (ImGui::IsItemHovered()) ImGui::SetTooltip("Select standard rendering or the Dungeoneer dithered, posterized visual style");
+		ImGui::PopItemWidth();
 
 		// only show option if not disabled VSYNC in SETUP.INI
 		if (g.gvsync != 0)

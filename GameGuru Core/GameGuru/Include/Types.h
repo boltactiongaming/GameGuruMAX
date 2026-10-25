@@ -3850,6 +3850,7 @@ struct visualstype
 	bool g_bDelayedShadows;
 	bool g_bDelayedShadowsLaptop;
 
+	int iVisualStyle; // 0 = None, 1 = Grimdark / Posterized
 	bool bBloomEnabled;
 	float fsetBloomThreshold;
 	float ApparentSize;
@@ -4100,6 +4101,7 @@ struct visualstype
 		 fSunShadowBias = 0.00005f;
 		 bColorGrading = false;
 		 ColorGradingLUT = "";
+		 iVisualStyle = 0;
 		 bBloomEnabled = false;
 		 bLevelVSyncEnabled = true;
 		 bOcclusionCulling = false;

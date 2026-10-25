@@ -202,6 +202,7 @@ void visuals_resetvalues (bool bNewLevel)
 	t.visuals.fSunShadowBias = 0.00005f;
 	t.visuals.bColorGrading = false;
 	t.visuals.ColorGradingLUT = "";
+	t.visuals.iVisualStyle = 0; // Default/reset and legacy files: standard rendering
 	t.visuals.bBloomEnabled = true;
 	t.visuals.bLevelVSyncEnabled = true;
 	t.visuals.bOcclusionCulling = false;
@@ -777,6 +778,9 @@ void visuals_save ( void )
 	t.strwork = ""; t.strwork = t.strwork + "visuals.EnvProbeBrightness=" + Str(t.visuals.fEnvProbeBrightness);
 	WriteString(1, t.strwork.Get());
 
+	t.strwork = ""; t.strwork = t.strwork + "visuals.VisualStyle=" + Str(t.visuals.iVisualStyle);
+	WriteString(1, t.strwork.Get());
+
 	t.strwork = ""; t.strwork = t.strwork + "visuals.BloomEnabled=" + Str(t.visuals.bBloomEnabled);
 	WriteString(1, t.strwork.Get());
 	t.strwork = ""; t.strwork = t.strwork + "visuals.BloomThreshold=" + Str(t.visuals.fsetBloomThreshold);
@@ -1096,6 +1100,7 @@ void visuals_load ( void )
 	t.visuals.fSunShadowBias = 0.00005f;
 	t.visuals.bColorGrading = false;
 	t.visuals.ColorGradingLUT = "";
+	t.visuals.iVisualStyle = 0; // Default/reset and legacy files: standard rendering
 	t.visuals.bBloomEnabled = true;
 	t.visuals.bLevelVSyncEnabled = true;
 	t.visuals.bOcclusionCulling = false;
@@ -1433,6 +1438,7 @@ void visuals_load ( void )
 
 			t.try_s = "visuals.EnvProbeBrightness"; if (t.tfield_s == t.try_s)  t.visuals.fEnvProbeBrightness = ValF(t.tvalue_s.Get());
 
+			t.try_s = "visuals.VisualStyle"; if (t.tfield_s == t.try_s) t.visuals.iVisualStyle = ValF(t.tvalue_s.Get()) == 1.0f ? 1 : 0;
 			t.try_s = "visuals.BloomEnabled"; if (t.tfield_s == t.try_s)  t.visuals.bBloomEnabled = ValF(t.tvalue_s.Get());
 			t.try_s = "visuals.BloomThreshold"; if (t.tfield_s == t.try_s)  t.visuals.fsetBloomThreshold = ValF(t.tvalue_s.Get());
 			t.try_s = "visuals.ApparentSize"; if (t.tfield_s == t.try_s)  t.visuals.ApparentSize = ValF(t.tvalue_s.Get());
