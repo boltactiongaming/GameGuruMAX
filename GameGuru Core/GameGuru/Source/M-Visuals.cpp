@@ -1438,7 +1438,12 @@ void visuals_load ( void )
 
 			t.try_s = "visuals.EnvProbeBrightness"; if (t.tfield_s == t.try_s)  t.visuals.fEnvProbeBrightness = ValF(t.tvalue_s.Get());
 
-			t.try_s = "visuals.VisualStyle"; if (t.tfield_s == t.try_s) t.visuals.iVisualStyle = ValF(t.tvalue_s.Get()) == 1.0f ? 1 : 0;
+			t.try_s = "visuals.VisualStyle";
+			if (t.tfield_s == t.try_s)
+			{
+				const float styleValue = ValF(t.tvalue_s.Get());
+				t.visuals.iVisualStyle = styleValue == 1.0f ? 1 : (styleValue == 2.0f ? 2 : 0);
+			}
 			t.try_s = "visuals.BloomEnabled"; if (t.tfield_s == t.try_s)  t.visuals.bBloomEnabled = ValF(t.tvalue_s.Get());
 			t.try_s = "visuals.BloomThreshold"; if (t.tfield_s == t.try_s)  t.visuals.fsetBloomThreshold = ValF(t.tvalue_s.Get());
 			t.try_s = "visuals.ApparentSize"; if (t.tfield_s == t.try_s)  t.visuals.ApparentSize = ValF(t.tvalue_s.Get());
