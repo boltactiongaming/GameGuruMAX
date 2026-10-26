@@ -52059,8 +52059,8 @@ bool PostProcess_Settings(float fTabColumnWidth, bool bVisualUpdated)
 		iLastOpenHeader = 8;
 
 		// Visual style: independent of exposure, gamma and other post effects.
-		const char* visual_style_options[] = { "None", "Grimdark / Posterized", "PS1", "Toon" };
-		t.visuals.iVisualStyle = (t.visuals.iVisualStyle >= 0 && t.visuals.iVisualStyle <= 3) ? t.visuals.iVisualStyle : 0;
+		const char* visual_style_options[] = { "None", "Grimdark / Posterized", "PS1", "Toon", "Inked", "EGA / Dithered" };
+		t.visuals.iVisualStyle = (t.visuals.iVisualStyle >= 0 && t.visuals.iVisualStyle <= 5) ? t.visuals.iVisualStyle : 0;
 		tab_tab_Column_text("Visual Style", fTabColumnWidth);
 		ImGui::PushItemWidth(-10);
 		if (ImGui::Combo("##DungeoneerVisualStyle", &t.visuals.iVisualStyle,
@@ -52070,7 +52070,7 @@ bool PostProcess_Settings(float fTabColumnWidth, bool bVisualUpdated)
 			if (master_renderer) master_renderer->setVisualStyle(t.visuals.iVisualStyle);
 			g.projectmodified = 1;
 		}
-		if (ImGui::IsItemHovered()) ImGui::SetTooltip("Select standard rendering, Grimdark / Posterized, PS1, or Toon");
+		if (ImGui::IsItemHovered()) ImGui::SetTooltip("Select standard rendering, Grimdark / Posterized, PS1, Toon, Inked, or EGA / Dithered");
 		ImGui::PopItemWidth();
 
 		// only show option if not disabled VSYNC in SETUP.INI
