@@ -1442,7 +1442,7 @@ void visuals_load ( void )
 			if (t.tfield_s == t.try_s)
 			{
 				const float styleValue = ValF(t.tvalue_s.Get());
-				t.visuals.iVisualStyle = styleValue == 1.0f ? 1 : (styleValue == 2.0f ? 2 : (styleValue == 3.0f ? 3 : (styleValue == 4.0f ? 4 : (styleValue == 5.0f ? 5 : 0))));
+				t.visuals.iVisualStyle = styleValue == 1.0f ? 1 : (styleValue == 2.0f ? 2 : (styleValue == 3.0f ? 3 : (styleValue == 4.0f ? 4 : (styleValue == 5.0f ? 5 : (styleValue == 6.0f ? 6 : (styleValue == 7.0f ? 7 : 0))))));
 			}
 			t.try_s = "visuals.BloomEnabled"; if (t.tfield_s == t.try_s)  t.visuals.bBloomEnabled = ValF(t.tvalue_s.Get());
 			t.try_s = "visuals.BloomThreshold"; if (t.tfield_s == t.try_s)  t.visuals.fsetBloomThreshold = ValF(t.tvalue_s.Get());
