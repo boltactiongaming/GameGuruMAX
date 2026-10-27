@@ -7520,6 +7520,7 @@ void Wicked_Update_Visuals(void *voidvisual)
 {
 	visualstype* visuals = (visualstype *) voidvisual;
 	if (master_renderer) master_renderer->setVisualStyle(visuals->iVisualStyle);
+	if (master_renderer) master_renderer->setRetroEffects((visuals->bVHSStatic ? 1 : 0) | (visuals->bCRTCurvature ? 2 : 0));
 	wiScene::WeatherComponent* weather = wiScene::GetScene().weathers.GetComponent(g_weatherEntityID);
 	if (weather)
 	{
@@ -52072,6 +52073,23 @@ bool PostProcess_Settings(float fTabColumnWidth, bool bVisualUpdated)
 		}
 		if (ImGui::IsItemHovered()) ImGui::SetTooltip("Select standard rendering, Grimdark / Posterized, PS1, Toon, Inked, EGA / Dithered, Woodcut, or Cel / Posterized");
 		ImGui::PopItemWidth();
+
+		tab_tab_Column_text("VHS Static", fTabColumnWidth);
+		if (ImGui::Checkbox("##DungeoneerbVHSStatic", &t.visuals.bVHSStatic))
+		{
+			t.gamevisuals.bVHSStatic = t.visuals.bVHSStatic;
+			if (master_renderer) master_renderer->setRetroEffects((t.visuals.bVHSStatic ? 1 : 0) | (t.visuals.bCRTCurvature ? 2 : 0));
+			g.projectmodified = 1;
+		}
+		if (ImGui::IsItemHovered()) ImGui::SetTooltip("Subtle animated grain and horizontal tape interference; scene only");
+		tab_tab_Column_text("CRT Curvature", fTabColumnWidth);
+		if (ImGui::Checkbox("##DungeoneerbCRTCurvature", &t.visuals.bCRTCurvature))
+		{
+			t.gamevisuals.bCRTCurvature = t.visuals.bCRTCurvature;
+			if (master_renderer) master_renderer->setRetroEffects((t.visuals.bVHSStatic ? 1 : 0) | (t.visuals.bCRTCurvature ? 2 : 0));
+			g.projectmodified = 1;
+		}
+		if (ImGui::IsItemHovered()) ImGui::SetTooltip("Gently curved scene with rounded dark borders; HUD remains flat");
 
 		// only show option if not disabled VSYNC in SETUP.INI
 		if (g.gvsync != 0)

@@ -202,6 +202,8 @@ void visuals_resetvalues (bool bNewLevel)
 	t.visuals.fSunShadowBias = 0.00005f;
 	t.visuals.bColorGrading = false;
 	t.visuals.ColorGradingLUT = "";
+	t.visuals.bVHSStatic = false;
+	t.visuals.bCRTCurvature = false;
 	t.visuals.iVisualStyle = 0; // Default/reset and legacy files: standard rendering
 	t.visuals.bBloomEnabled = true;
 	t.visuals.bLevelVSyncEnabled = true;
@@ -778,6 +780,10 @@ void visuals_save ( void )
 	t.strwork = ""; t.strwork = t.strwork + "visuals.EnvProbeBrightness=" + Str(t.visuals.fEnvProbeBrightness);
 	WriteString(1, t.strwork.Get());
 
+	t.strwork = ""; t.strwork = t.strwork + "visuals.VHSStatic=" + Str(t.visuals.bVHSStatic);
+	WriteString(1, t.strwork.Get());
+	t.strwork = ""; t.strwork = t.strwork + "visuals.CRTCurvature=" + Str(t.visuals.bCRTCurvature);
+	WriteString(1, t.strwork.Get());
 	t.strwork = ""; t.strwork = t.strwork + "visuals.VisualStyle=" + Str(t.visuals.iVisualStyle);
 	WriteString(1, t.strwork.Get());
 
@@ -1100,6 +1106,8 @@ void visuals_load ( void )
 	t.visuals.fSunShadowBias = 0.00005f;
 	t.visuals.bColorGrading = false;
 	t.visuals.ColorGradingLUT = "";
+	t.visuals.bVHSStatic = false;
+	t.visuals.bCRTCurvature = false;
 	t.visuals.iVisualStyle = 0; // Default/reset and legacy files: standard rendering
 	t.visuals.bBloomEnabled = true;
 	t.visuals.bLevelVSyncEnabled = true;
@@ -1438,6 +1446,8 @@ void visuals_load ( void )
 
 			t.try_s = "visuals.EnvProbeBrightness"; if (t.tfield_s == t.try_s)  t.visuals.fEnvProbeBrightness = ValF(t.tvalue_s.Get());
 
+			t.try_s = "visuals.VHSStatic"; if (t.tfield_s == t.try_s) t.visuals.bVHSStatic = ValF(t.tvalue_s.Get()) == 1.0f;
+			t.try_s = "visuals.CRTCurvature"; if (t.tfield_s == t.try_s) t.visuals.bCRTCurvature = ValF(t.tvalue_s.Get()) == 1.0f;
 			t.try_s = "visuals.VisualStyle";
 			if (t.tfield_s == t.try_s)
 			{
