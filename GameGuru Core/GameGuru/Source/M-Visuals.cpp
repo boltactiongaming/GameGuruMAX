@@ -202,6 +202,16 @@ void visuals_resetvalues (bool bNewLevel)
 	t.visuals.fSunShadowBias = 0.00005f;
 	t.visuals.bColorGrading = false;
 	t.visuals.ColorGradingLUT = "";
+	t.visuals.iGrimColorLevels = 16;
+	t.visuals.iGrimDither = 100;
+	t.visuals.iPS1ColorLevels = 32;
+	t.visuals.iPS1Dither = 100;
+	t.visuals.iEGADither = 100;
+	t.visuals.iEGADitherSize = 2;
+	t.visuals.iWoodDither = 100;
+	t.visuals.iWoodDitherSize = 2;
+	t.visuals.fVHSStaticStrength = 25.0f;
+	t.visuals.iVHSGrainSize = 1;
 	t.visuals.bVHSStatic = false;
 	t.visuals.bCRTCurvature = false;
 	t.visuals.iVisualStyle = 0; // Default/reset and legacy files: standard rendering
@@ -780,6 +790,26 @@ void visuals_save ( void )
 	t.strwork = ""; t.strwork = t.strwork + "visuals.EnvProbeBrightness=" + Str(t.visuals.fEnvProbeBrightness);
 	WriteString(1, t.strwork.Get());
 
+	t.strwork = ""; t.strwork = t.strwork + "visuals.iGrimColorLevels=" + Str(t.visuals.iGrimColorLevels);
+	WriteString(1, t.strwork.Get());
+	t.strwork = ""; t.strwork = t.strwork + "visuals.iGrimDither=" + Str(t.visuals.iGrimDither);
+	WriteString(1, t.strwork.Get());
+	t.strwork = ""; t.strwork = t.strwork + "visuals.iPS1ColorLevels=" + Str(t.visuals.iPS1ColorLevels);
+	WriteString(1, t.strwork.Get());
+	t.strwork = ""; t.strwork = t.strwork + "visuals.iPS1Dither=" + Str(t.visuals.iPS1Dither);
+	WriteString(1, t.strwork.Get());
+	t.strwork = ""; t.strwork = t.strwork + "visuals.iEGADither=" + Str(t.visuals.iEGADither);
+	WriteString(1, t.strwork.Get());
+	t.strwork = ""; t.strwork = t.strwork + "visuals.iEGADitherSize=" + Str(t.visuals.iEGADitherSize);
+	WriteString(1, t.strwork.Get());
+	t.strwork = ""; t.strwork = t.strwork + "visuals.iWoodDither=" + Str(t.visuals.iWoodDither);
+	WriteString(1, t.strwork.Get());
+	t.strwork = ""; t.strwork = t.strwork + "visuals.iWoodDitherSize=" + Str(t.visuals.iWoodDitherSize);
+	WriteString(1, t.strwork.Get());
+	t.strwork = ""; t.strwork = t.strwork + "visuals.VHSStaticStrength=" + Str(t.visuals.fVHSStaticStrength);
+	WriteString(1, t.strwork.Get());
+	t.strwork = ""; t.strwork = t.strwork + "visuals.VHSGrainSize=" + Str(t.visuals.iVHSGrainSize);
+	WriteString(1, t.strwork.Get());
 	t.strwork = ""; t.strwork = t.strwork + "visuals.VHSStatic=" + Str(t.visuals.bVHSStatic);
 	WriteString(1, t.strwork.Get());
 	t.strwork = ""; t.strwork = t.strwork + "visuals.CRTCurvature=" + Str(t.visuals.bCRTCurvature);
@@ -1106,6 +1136,16 @@ void visuals_load ( void )
 	t.visuals.fSunShadowBias = 0.00005f;
 	t.visuals.bColorGrading = false;
 	t.visuals.ColorGradingLUT = "";
+	t.visuals.iGrimColorLevels = 16;
+	t.visuals.iGrimDither = 100;
+	t.visuals.iPS1ColorLevels = 32;
+	t.visuals.iPS1Dither = 100;
+	t.visuals.iEGADither = 100;
+	t.visuals.iEGADitherSize = 2;
+	t.visuals.iWoodDither = 100;
+	t.visuals.iWoodDitherSize = 2;
+	t.visuals.fVHSStaticStrength = 25.0f;
+	t.visuals.iVHSGrainSize = 1;
 	t.visuals.bVHSStatic = false;
 	t.visuals.bCRTCurvature = false;
 	t.visuals.iVisualStyle = 0; // Default/reset and legacy files: standard rendering
@@ -1446,6 +1486,66 @@ void visuals_load ( void )
 
 			t.try_s = "visuals.EnvProbeBrightness"; if (t.tfield_s == t.try_s)  t.visuals.fEnvProbeBrightness = ValF(t.tvalue_s.Get());
 
+			t.try_s = "visuals.iGrimColorLevels";
+			if (t.tfield_s == t.try_s)
+			{
+				const float value = ValF(t.tvalue_s.Get());
+				t.visuals.iGrimColorLevels = (value >= 4.0f && value <= 32.0f) ? (int)value : 16;
+			}
+			t.try_s = "visuals.iGrimDither";
+			if (t.tfield_s == t.try_s)
+			{
+				const float value = ValF(t.tvalue_s.Get());
+				t.visuals.iGrimDither = (value >= 0.0f && value <= 200.0f) ? (int)value : 100;
+			}
+			t.try_s = "visuals.iPS1ColorLevels";
+			if (t.tfield_s == t.try_s)
+			{
+				const float value = ValF(t.tvalue_s.Get());
+				t.visuals.iPS1ColorLevels = (value >= 4.0f && value <= 32.0f) ? (int)value : 32;
+			}
+			t.try_s = "visuals.iPS1Dither";
+			if (t.tfield_s == t.try_s)
+			{
+				const float value = ValF(t.tvalue_s.Get());
+				t.visuals.iPS1Dither = (value >= 0.0f && value <= 200.0f) ? (int)value : 100;
+			}
+			t.try_s = "visuals.iEGADither";
+			if (t.tfield_s == t.try_s)
+			{
+				const float value = ValF(t.tvalue_s.Get());
+				t.visuals.iEGADither = (value >= 0.0f && value <= 100.0f) ? (int)value : 100;
+			}
+			t.try_s = "visuals.iEGADitherSize";
+			if (t.tfield_s == t.try_s)
+			{
+				const float value = ValF(t.tvalue_s.Get());
+				t.visuals.iEGADitherSize = (value >= 1.0f && value <= 3.0f) ? (int)value : 2;
+			}
+			t.try_s = "visuals.iWoodDither";
+			if (t.tfield_s == t.try_s)
+			{
+				const float value = ValF(t.tvalue_s.Get());
+				t.visuals.iWoodDither = (value >= 0.0f && value <= 100.0f) ? (int)value : 100;
+			}
+			t.try_s = "visuals.iWoodDitherSize";
+			if (t.tfield_s == t.try_s)
+			{
+				const float value = ValF(t.tvalue_s.Get());
+				t.visuals.iWoodDitherSize = (value >= 1.0f && value <= 3.0f) ? (int)value : 2;
+			}
+			t.try_s = "visuals.VHSStaticStrength";
+			if (t.tfield_s == t.try_s)
+			{
+				const float value = ValF(t.tvalue_s.Get());
+				t.visuals.fVHSStaticStrength = (value >= 0.0f && value <= 100.0f) ? value : 25.0f;
+			}
+			t.try_s = "visuals.VHSGrainSize";
+			if (t.tfield_s == t.try_s)
+			{
+				const float value = ValF(t.tvalue_s.Get());
+				t.visuals.iVHSGrainSize = value == 2.0f ? 2 : (value == 3.0f ? 3 : 1);
+			}
 			t.try_s = "visuals.VHSStatic"; if (t.tfield_s == t.try_s) t.visuals.bVHSStatic = ValF(t.tvalue_s.Get()) == 1.0f;
 			t.try_s = "visuals.CRTCurvature"; if (t.tfield_s == t.try_s) t.visuals.bCRTCurvature = ValF(t.tvalue_s.Get()) == 1.0f;
 			t.try_s = "visuals.VisualStyle";

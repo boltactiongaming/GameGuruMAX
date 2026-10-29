@@ -7521,6 +7521,14 @@ void Wicked_Update_Visuals(void *voidvisual)
 	visualstype* visuals = (visualstype *) voidvisual;
 	if (master_renderer) master_renderer->setVisualStyle(visuals->iVisualStyle);
 	if (master_renderer) master_renderer->setRetroEffects((visuals->bVHSStatic ? 1 : 0) | (visuals->bCRTCurvature ? 2 : 0));
+	if (master_renderer) master_renderer->setVHSControls(visuals->fVHSStaticStrength, visuals->iVHSGrainSize);
+	if (master_renderer)
+	{
+		master_renderer->setStyleControls(1, visuals->iGrimColorLevels, visuals->iGrimDither, 1);
+		master_renderer->setStyleControls(2, visuals->iPS1ColorLevels, visuals->iPS1Dither, 1);
+		master_renderer->setStyleControls(5, 16, visuals->iEGADither, visuals->iEGADitherSize);
+		master_renderer->setStyleControls(6, 4, visuals->iWoodDither, visuals->iWoodDitherSize);
+	}
 	wiScene::WeatherComponent* weather = wiScene::GetScene().weathers.GetComponent(g_weatherEntityID);
 	if (weather)
 	{
@@ -52074,6 +52082,71 @@ bool PostProcess_Settings(float fTabColumnWidth, bool bVisualUpdated)
 		if (ImGui::IsItemHovered()) ImGui::SetTooltip("Select standard rendering, Grimdark / Posterized, PS1, Toon, Inked, EGA / Dithered, Woodcut, or Cel / Posterized");
 		ImGui::PopItemWidth();
 
+		bool styleControlsChanged = false;
+		if (t.visuals.iVisualStyle == 1)
+		{
+			tab_tab_Column_text("Color Levels", fTabColumnWidth);
+			ImGui::PushItemWidth(-10);
+			styleControlsChanged |= ImGui::SliderInt("##iGrimColorLevels", &t.visuals.iGrimColorLevels, 4, 32, "%d");
+			ImGui::PopItemWidth();
+			tab_tab_Column_text("Dither Strength", fTabColumnWidth);
+			ImGui::PushItemWidth(-10);
+			styleControlsChanged |= ImGui::SliderInt("##iGrimDither", &t.visuals.iGrimDither, 0, 200, "%d%%");
+			ImGui::PopItemWidth();
+		}
+		if (t.visuals.iVisualStyle == 2)
+		{
+			tab_tab_Column_text("Color Levels", fTabColumnWidth);
+			ImGui::PushItemWidth(-10);
+			styleControlsChanged |= ImGui::SliderInt("##iPS1ColorLevels", &t.visuals.iPS1ColorLevels, 4, 32, "%d");
+			ImGui::PopItemWidth();
+			tab_tab_Column_text("Dither Strength", fTabColumnWidth);
+			ImGui::PushItemWidth(-10);
+			styleControlsChanged |= ImGui::SliderInt("##iPS1Dither", &t.visuals.iPS1Dither, 0, 200, "%d%%");
+			ImGui::PopItemWidth();
+		}
+		if (t.visuals.iVisualStyle == 5)
+		{
+			tab_tab_Column_text("Dither Size", fTabColumnWidth);
+			ImGui::PushItemWidth(-10);
+			styleControlsChanged |= ImGui::SliderInt("##iEGADitherSize", &t.visuals.iEGADitherSize, 1, 3, "%d px");
+			ImGui::PopItemWidth();
+			tab_tab_Column_text("Dither Amount", fTabColumnWidth);
+			ImGui::PushItemWidth(-10);
+			styleControlsChanged |= ImGui::SliderInt("##iEGADither", &t.visuals.iEGADither, 0, 100, "%d%%");
+			ImGui::PopItemWidth();
+		}
+		if (t.visuals.iVisualStyle == 6)
+		{
+			tab_tab_Column_text("Dither Size", fTabColumnWidth);
+			ImGui::PushItemWidth(-10);
+			styleControlsChanged |= ImGui::SliderInt("##iWoodDitherSize", &t.visuals.iWoodDitherSize, 1, 3, "%d px");
+			ImGui::PopItemWidth();
+			tab_tab_Column_text("Dither Amount", fTabColumnWidth);
+			ImGui::PushItemWidth(-10);
+			styleControlsChanged |= ImGui::SliderInt("##iWoodDither", &t.visuals.iWoodDither, 0, 100, "%d%%");
+			ImGui::PopItemWidth();
+		}
+		if (styleControlsChanged)
+		{
+			t.gamevisuals.iGrimColorLevels = t.visuals.iGrimColorLevels;
+			t.gamevisuals.iGrimDither = t.visuals.iGrimDither;
+			t.gamevisuals.iPS1ColorLevels = t.visuals.iPS1ColorLevels;
+			t.gamevisuals.iPS1Dither = t.visuals.iPS1Dither;
+			t.gamevisuals.iEGADither = t.visuals.iEGADither;
+			t.gamevisuals.iEGADitherSize = t.visuals.iEGADitherSize;
+			t.gamevisuals.iWoodDither = t.visuals.iWoodDither;
+			t.gamevisuals.iWoodDitherSize = t.visuals.iWoodDitherSize;
+			g.projectmodified = 1;
+		}
+		if (master_renderer)
+		{
+			master_renderer->setStyleControls(1, t.visuals.iGrimColorLevels, t.visuals.iGrimDither, 1);
+			master_renderer->setStyleControls(2, t.visuals.iPS1ColorLevels, t.visuals.iPS1Dither, 1);
+			master_renderer->setStyleControls(5, 16, t.visuals.iEGADither, t.visuals.iEGADitherSize);
+			master_renderer->setStyleControls(6, 4, t.visuals.iWoodDither, t.visuals.iWoodDitherSize);
+		}
+
 		tab_tab_Column_text("VHS Static", fTabColumnWidth);
 		if (ImGui::Checkbox("##DungeoneerbVHSStatic", &t.visuals.bVHSStatic))
 		{
@@ -52082,6 +52155,29 @@ bool PostProcess_Settings(float fTabColumnWidth, bool bVisualUpdated)
 			g.projectmodified = 1;
 		}
 		if (ImGui::IsItemHovered()) ImGui::SetTooltip("Subtle animated grain and horizontal tape interference; scene only");
+		if (t.visuals.bVHSStatic)
+		{
+			t.visuals.fVHSStaticStrength = (t.visuals.fVHSStaticStrength >= 0.0f && t.visuals.fVHSStaticStrength <= 100.0f) ? t.visuals.fVHSStaticStrength : 25.0f;
+			t.visuals.iVHSGrainSize = (t.visuals.iVHSGrainSize >= 1 && t.visuals.iVHSGrainSize <= 3) ? t.visuals.iVHSGrainSize : 1;
+			bool vhsControlsChanged = false;
+			tab_tab_Column_text("Static Strength", fTabColumnWidth);
+			ImGui::PushItemWidth(-10);
+			vhsControlsChanged |= ImGui::SliderFloat("##DungeoneerVHSStrength", &t.visuals.fVHSStaticStrength, 0.0f, 100.0f, "%.0f%%");
+			if (ImGui::IsItemHovered()) ImGui::SetTooltip("Fine grain intensity only; 25%% matches the original. Tape bands remain unchanged.");
+			ImGui::PopItemWidth();
+			tab_tab_Column_text("Grain Size", fTabColumnWidth);
+			ImGui::PushItemWidth(-10);
+			vhsControlsChanged |= ImGui::SliderInt("##DungeoneerVHSGrainSize", &t.visuals.iVHSGrainSize, 1, 3, "%d px");
+			if (ImGui::IsItemHovered()) ImGui::SetTooltip("Noise cell size in internal render pixels; larger grain may survive video compression better.");
+			ImGui::PopItemWidth();
+			if (vhsControlsChanged)
+			{
+				t.gamevisuals.fVHSStaticStrength = t.visuals.fVHSStaticStrength;
+				t.gamevisuals.iVHSGrainSize = t.visuals.iVHSGrainSize;
+				if (master_renderer) master_renderer->setVHSControls(t.visuals.fVHSStaticStrength, t.visuals.iVHSGrainSize);
+				g.projectmodified = 1;
+			}
+		}
 		tab_tab_Column_text("CRT Curvature", fTabColumnWidth);
 		if (ImGui::Checkbox("##DungeoneerbCRTCurvature", &t.visuals.bCRTCurvature))
 		{

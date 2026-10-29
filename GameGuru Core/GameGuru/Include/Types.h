@@ -3850,6 +3850,16 @@ struct visualstype
 	bool g_bDelayedShadows;
 	bool g_bDelayedShadowsLaptop;
 
+	int iGrimColorLevels;
+	int iGrimDither;
+	int iPS1ColorLevels;
+	int iPS1Dither;
+	int iEGADither;
+	int iEGADitherSize;
+	int iWoodDither;
+	int iWoodDitherSize;
+	float fVHSStaticStrength; // UI percent, 25 preserves original grain
+	int iVHSGrainSize; // 1..3 output pixels per noise cell
 	bool bVHSStatic;
 	bool bCRTCurvature;
 	int iVisualStyle; // 0 = None, 1 = Grimdark / Posterized
@@ -4103,6 +4113,16 @@ struct visualstype
 		 fSunShadowBias = 0.00005f;
 		 bColorGrading = false;
 		 ColorGradingLUT = "";
+		 iGrimColorLevels = 16;
+		 iGrimDither = 100;
+		 iPS1ColorLevels = 32;
+		 iPS1Dither = 100;
+		 iEGADither = 100;
+		 iEGADitherSize = 2;
+		 iWoodDither = 100;
+		 iWoodDitherSize = 2;
+		 fVHSStaticStrength = 25.0f;
+		 iVHSGrainSize = 1;
 		 bVHSStatic = false;
 		 bCRTCurvature = false;
 		 iVisualStyle = 0;
